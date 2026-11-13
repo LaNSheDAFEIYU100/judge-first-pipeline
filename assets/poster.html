@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>判据前置 · 云端全自动角色视觉生产管线 一屏版</title>
+<style>
+  :root{
+    --bg:#0d0f13; --bg2:#11141a; --card:#161a21; --card2:#1b2029;
+    --line:#28303d; --txt:#e9edf4; --dim:#98a3b6; --faint:#6b7688;
+    --accent:#4ea8ff; --ok:#3ddc97; --warn:#ffb545; --hot:#ff6b81; --violet:#b48cff;
+    --mono:"Cascadia Mono","Consolas","SF Mono",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:
+      radial-gradient(1200px 600px at 12% -8%, rgba(78,168,255,.10), transparent 60%),
+      radial-gradient(900px 500px at 95% 0%, rgba(180,140,255,.08), transparent 60%),
+      var(--bg);
+    color:var(--txt);
+    font-family:"Segoe UI","Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif;
+    padding:34px 34px 30px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{width:1532px;margin:0 auto}
+
+  /* ---------- header ---------- */
+  .eyebrow{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.16em;color:var(--faint)}
+  .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  h1{font-size:42px;line-height:1.16;font-weight:700;margin:14px 0 0;letter-spacing:-.4px}
+  h1 em{font-style:normal;color:var(--accent)}
+  .sub{margin-top:12px;font-size:17px;color:var(--dim);max-width:1210px;line-height:1.7}
+  .sub b{color:var(--txt);font-weight:600}
+  .head-meta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+  .chip{font-size:12.5px;color:var(--dim);border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 13px}
+  .chip.hot{border-color:rgba(255,107,129,.42);color:#ffb9c3}
+  .chip.ok{border-color:rgba(61,220,151,.38);color:#9fecc9}
+  .chip.vio{border-color:rgba(180,140,255,.42);color:#d3c1ff}
+
+  /* ---------- generic ---------- */
+  .sec{margin-top:26px}
+  .sec-h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .sec-h .n{font-family:var(--mono);font-size:12px;color:#0d0f13;background:var(--accent);border-radius:5px;padding:2px 8px;font-weight:700}
+  .sec-h h2{font-size:19px;font-weight:650;letter-spacing:.01em}
+  .sec-h .tag{font-size:12px;color:var(--faint);border-left:1px solid var(--line);padding-left:12px}
+  .card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:18px 20px;position:relative;overflow:hidden}
+  .card h3{font-size:16.5px;font-weight:650;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+  .card p{font-size:13.6px;color:var(--dim);line-height:1.72}
+  .card ul{margin-top:9px;list-style:none}
+  .card li{font-size:13.2px;color:var(--dim);line-height:1.8;padding-left:15px;position:relative}
+  .card li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.75}
+  .card li b{color:var(--txt);font-weight:600}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .bar{position:absolute;left:0;top:0;bottom:0;width:3px}
+  .c-accent{--c:var(--accent)} .c-ok{--c:var(--ok)} .c-warn{--c:var(--warn)}
+  .c-hot{--c:var(--hot)} .c-vio{--c:var(--violet)}
+  .card[class*="c-"]{padding-left:22px}
+  .card[class*="c-"] .bar{background:var(--c)}
+  .card[class*="c-"] h3{color:var(--c)}
+  .who{margin-left:auto;font-size:11px;letter-spacing:.08em;color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:2px 8px}
+
+  /* ---------- architecture ---------- */
+  .arch{display:grid;grid-template-columns:1.02fr 1.62fr 1fr;gap:14px}
+  .arch .card .big{font-size:23px;font-weight:700;letter-spacing:.02em;margin:2px 0 4px}
+  .arch .card .k{font-family:var(--mono);font-size:11.5px;color:var(--faint);letter-spacing:.12em}
+  .pack{display:flex;gap:10px;margin-top:12px}
+  .pack>div{flex:1;background:#12161d;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .pack .t{font-size:14.5px;font-weight:650;margin-bottom:4px}
+  .pack .d{font-size:12.2px;color:var(--faint);line-height:1.6}
+  .pack .layer{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-size:12.1px;color:var(--faint);line-height:1.6}
+  .split{display:flex;gap:8px;margin-top:12px}
+  .split>div{flex:1;background:#12161d;border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+  .split .t{font-size:13.4px;font-weight:650;color:var(--txt)}
+  .split .d{font-size:12.2px;color:var(--faint);line-height:1.6;margin-top:3px}
+
+  /* ---------- lanes ---------- */
+  .lanes{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--card2),var(--card));padding:16px 18px}
+  .lane-row{display:grid;grid-template-columns:112px repeat(5,1fr);gap:11px;align-items:stretch}
+  .lane-row+.lane-row{margin-top:11px}
+  .lane-label{font-size:12.5px;color:var(--faint);display:flex;flex-direction:column;justify-content:center;gap:4px}
+  .lane-label b{font-size:13px;color:var(--txt);font-weight:600}
+  .node{background:#131820;border:1px solid var(--line);border-radius:11px;padding:12px 14px;position:relative}
+  .node .step{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.1em;margin-bottom:5px}
+  .node .t{font-size:14.6px;font-weight:650;margin-bottom:5px}
+  .node .d{font-size:12.3px;color:var(--dim);line-height:1.6}
+  .node.step1{border-color:rgba(78,168,255,.4)}
+  .node.step1 .t{color:var(--accent)}
+  .node.rule{background:#141a16;border-color:rgba(61,220,151,.3)}
+  .node.rule .t{color:#8fe8c0;font-size:13.6px}
+  .node.rule .d{color:#7e9d8e}
+  .node.mach{background:#1a1512;border-color:rgba(255,181,69,.32)}
+  .node.mach .t{color:var(--warn)}
+  .node.asset{background:#17141c;border-color:rgba(180,140,255,.34)}
+  .node.asset .t{color:#cbb2ff}
+  .node.idle{background:#12151b;border-style:dashed;opacity:.72}
+  .node.idle .t{color:var(--faint);font-size:13.4px}
+  .loop{margin-top:11px;font-size:12.6px;color:var(--warn);border-left:2px solid rgba(255,181,69,.5);padding-left:11px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;font-size:12.3px;color:var(--faint)}
+  .legend span{display:flex;align-items:center;gap:7px}
+  .sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+  /* ---------- status ---------- */
+  .status{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .st{border-radius:13px;border:1px solid var(--line);background:var(--card);padding:16px 18px}
+  .st .hd{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .st .pill{font-size:11px;letter-spacing:.06em;border-radius:999px;padding:3px 10px}
+  .pill.live{background:rgba(61,220,151,.13);color:#8fe8c0;border:1px solid rgba(61,220,151,.3)}
+  .pill.prep{background:rgba(255,181,69,.12);color:#ffd699;border:1px solid rgba(255,181,69,.3)}
+  .pill.build{background:rgba(180,140,255,.12);color:#cbb2ff;border:1px solid rgba(180,140,255,.32)}
+  .st h3{font-size:15.6px;font-weight:650}
+  .st p{font-size:13px;color:var(--dim);line-height:1.7}
+
+  /* ---------- rules band ---------- */
+  .band{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .rule-card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:14px;padding:16px 20px;position:relative;padding-left:22px}
+  .rule-card .bar{background:var(--c)}
+  .rule-card h3{font-size:16px;font-weight:650;color:var(--c);margin-bottom:7px}
+  .rule-card p{font-size:13.4px;color:var(--dim);line-height:1.72}
+  .rule-card p b{color:var(--txt)}
+
+  /* ---------- boundary ---------- */
+  .bound{display:grid;grid-template-columns:1fr 1.35fr;gap:14px}
+  .bound .card p b{color:var(--txt);font-weight:600}
+  .bound ul li::before{background:var(--warn)}
+
+  footer{margin-top:26px;border-top:1px solid var(--line);padding-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--faint)}
+  footer .k{font-family:var(--mono);letter-spacing:.1em}
+
+  /* ---------- flow figure ---------- */
+  .fig{margin-top:12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(180deg,var(--card2),var(--card));padding:12px 14px 10px}
+  .fig svg{display:block;width:100%;height:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span>角色视觉生产 · 云端全自动管线（对外展示版）</div>
+    <h1>判据前置：<em>机器照着规则跑全套，人只留两个决定</em></h1>
+    <p class="sub">出图跑在云端（<b>即梦画布</b>），跑的是<b>云端全自动</b>——从一份设定到一整套成图，中间不再逐张等人。整套系统只有一句核心思路：<b>先把"什么样算合格"写成机器能判的规则，再让机器照着规则执行</b>。人退到两头：定方向、抽一次试片、终判。</p>
+    <div class="head-meta">
+      <span class="chip hot">对外展示版 · 不含内部实现细节</span>
+      <span class="chip hot">不含运行数据</span>
+      <span class="chip ok">IP 包：角色视觉线已跑通</span>
+      <span class="chip vio">服装包：独立成包，推进中</span>
+      <span class="chip">口径更新 · 2026-11</span>
+    </div>
+  </header>
+
+  <!-- 01 总体结构 -->
+  <section class="sec">
+    <div class="sec-h"><span class="n">01</span><h2>总体结构：一份内核，两个领域包</h2><span class="tag">通用能力与题材内容分层，互不污染</span></div>
+    <div class="arch">
+      <div class="card c-accent">
+        <div class="bar"></div>
+        <div class="k">GENERAL KERNEL</div>
+        <div class="big">通用内核</div>
+        <p>两个领域包共用同一份内核，只写一次、只修一次。</p>
+        <ul>
+          <li><b>编排</b>：按步骤推进、按批次执行</li>
+          <li><b>判定</b>：结果先过规则再给人看</li>
+          <li><b>台账</b>：谁在什么时候改了什么</li>
+          <li><b>沉淀</b>：过程留痕可回溯</li>
+        </ul>
+      </div>
+      <div class="card c-ok">
+        <div class="bar"></div>
+        <div class="k">DOMAIN PACKS</div>
+        <div class="big">领域包 · 可插拔</div>
+        <p>题材内容各自独立：机械动作复制一份，题材规则一条都不共用，换题材不用重写内核。</p>
+        <div class="pack">
+          <div>
+            <div class="t" style="color:#8fe8c0">IP 包</div>
+            <div class="d">一个 IP 的世界与角色视觉整体</div>
+            <div class="layer">上层：世界观文本（文化定位、组织、时间线、立场）<br>下层：角色视觉（脸型五官 · 发型 · 服装配色 · 体型）<br>换 IP 只换包，内核不动</div>
+          </div>
+          <div>
+            <div class="t" style="color:#8fe8c0">服装包</div>
+            <div class="d">款式与搭配的独立产出线</div>
+            <div class="layer">版型 · 面料 · 配饰 · 场景搭配<br>与 IP 包零互相引用，独立并行</div>
+          </div>
+        </div>
+      </div>
+      <div class="card c-warn">
+        <div class="bar"></div>
+        <div class="k">GENERATION</div>
+        <div class="big">云端全自动</div>
+        <p>生成在即梦画布，判定留在本地：云端负责画，本地负责说清楚"这张过没过"。</p>
+        <div class="split">
+          <div><div class="t">生成侧</div><div class="d">即梦画布批量出图，一条命令跑完全套</div></div>
+          <div><div class="t">判定侧</div><div class="d">本地规则逐项核对</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 流程指示图 -->
+  <section class="sec">
+    <div class="sec-h"><span class="n">02</span><h2>端到端流程指示图：一条线看完整条链</h2><span class="tag">人只在两头，机器跑完中段</span></div>
+    <div class="fig">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1532 404" width="100%" style="height:auto" font-family="Microsoft YaHei, PingFang SC, Segoe UI, sans-serif">
+  <rect x="0" y="0" width="1532" height="404" fill="#0d0f13"/>
+
+  <!-- 标题 -->
+  <text x="16" y="24" fill="#e8ecf3" font-size="16" font-weight="700">端到端一条线：人只在两头，机器跑完中段</text>
+  <g font-size="12" fill="#9aa5b8">
+    <circle cx="18" cy="40" r="5" fill="#4ea8ff"/><text x="29" y="44">人做决定</text>
+    <circle cx="105" cy="40" r="5" fill="#ffb545"/><text x="116" y="44">机器自动执行</text>
+    <circle cx="222" cy="40" r="5" fill="#3ddc97"/><text x="233" y="44">规则在把关</text>
+    <circle cx="325" cy="40" r="5" fill="#ff6b81"/><text x="336" y="44">不通过回改</text>
+  </g>
+
+  <!-- 节点 -->
+  <g>
+    <rect x="17" y="60" width="160" height="96" rx="10" fill="#111721" stroke="#4ea8ff" stroke-width="1.5"/>
+    <text x="29" y="80" fill="#4ea8ff" font-size="10" font-weight="700" letter-spacing="1">DECIDE 1</text>
+    <text x="29" y="104" fill="#e8ecf3" font-size="15" font-weight="700">给方向</text>
+    <text x="29" y="124" fill="#9aa5b8" font-size="11.5">出个角色，还是</text>
+    <text x="29" y="141" fill="#9aa5b8" font-size="11.5">一个 IP 里的角色</text>
+
+    <rect x="208" y="60" width="160" height="96" rx="10" fill="#111721" stroke="#4ea8ff" stroke-width="1.5"/>
+    <text x="220" y="80" fill="#4ea8ff" font-size="10" font-weight="700" letter-spacing="1">DECIDE 2</text>
+    <text x="220" y="104" fill="#e8ecf3" font-size="15" font-weight="700">抽方向试片</text>
+    <text x="220" y="124" fill="#9aa5b8" font-size="11.5">两条方向里挑一条</text>
+    <text x="220" y="141" fill="#9aa5b8" font-size="11.5">走，人只抽一次</text>
+
+    <rect x="399" y="60" width="160" height="96" rx="10" fill="#17140f" stroke="#ffb545" stroke-width="1.5"/>
+    <text x="411" y="80" fill="#ffb545" font-size="10" font-weight="700" letter-spacing="1">AUTO 1</text>
+    <text x="411" y="104" fill="#e8ecf3" font-size="15" font-weight="700">自动成稿</text>
+    <text x="411" y="124" fill="#9aa5b8" font-size="11.5">提示词与清单</text>
+    <text x="411" y="141" fill="#9aa5b8" font-size="11.5">一次生成</text>
+
+    <rect x="590" y="60" width="160" height="96" rx="10" fill="#17140f" stroke="#ffb545" stroke-width="1.5"/>
+    <text x="602" y="80" fill="#ffb545" font-size="10" font-weight="700" letter-spacing="1">AUTO 2</text>
+    <text x="602" y="104" fill="#e8ecf3" font-size="15" font-weight="700">出方向试片</text>
+    <text x="602" y="124" fill="#9aa5b8" font-size="11.5">两条方向各出一张</text>
+    <text x="602" y="141" fill="#9aa5b8" font-size="11.5">交给人抽</text>
+
+    <rect x="781" y="60" width="160" height="96" rx="10" fill="#17140f" stroke="#ffb545" stroke-width="1.5"/>
+    <text x="793" y="80" fill="#ffb545" font-size="10" font-weight="700" letter-spacing="1">AUTO 3</text>
+    <text x="793" y="104" fill="#e8ecf3" font-size="15" font-weight="700">出母版</text>
+    <text x="793" y="124" fill="#9aa5b8" font-size="11.5">由定稿全身推出</text>
+    <text x="793" y="141" fill="#9aa5b8" font-size="11.5">锚点后不再回头改</text>
+
+    <rect x="972" y="60" width="160" height="96" rx="10" fill="#17140f" stroke="#ffb545" stroke-width="1.5"/>
+    <text x="984" y="80" fill="#ffb545" font-size="10" font-weight="700" letter-spacing="1">AUTO 4</text>
+    <text x="984" y="104" fill="#e8ecf3" font-size="15" font-weight="700">一次跑完全套</text>
+    <text x="984" y="124" fill="#9aa5b8" font-size="11.5">逐档条目跑完</text>
+    <text x="984" y="141" fill="#9aa5b8" font-size="11.5">不逐张等人验收</text>
+
+    <rect x="1163" y="60" width="160" height="96" rx="10" fill="#17140f" stroke="#ffb545" stroke-width="1.5"/>
+    <text x="1175" y="80" fill="#ffb545" font-size="10" font-weight="700" letter-spacing="1">AUTO 5</text>
+    <text x="1175" y="104" fill="#e8ecf3" font-size="15" font-weight="700">自检归档</text>
+    <text x="1175" y="124" fill="#9aa5b8" font-size="11.5">逐档判据、拼版</text>
+    <text x="1175" y="141" fill="#9aa5b8" font-size="11.5">记录与台账</text>
+
+    <rect x="1354" y="60" width="160" height="96" rx="10" fill="#111721" stroke="#4ea8ff" stroke-width="1.5"/>
+    <text x="1366" y="80" fill="#4ea8ff" font-size="10" font-weight="700" letter-spacing="1">FINAL</text>
+    <text x="1366" y="104" fill="#e8ecf3" font-size="15" font-weight="700">终判</text>
+    <text x="1366" y="124" fill="#9aa5b8" font-size="11.5">看拼版，收</text>
+    <text x="1366" y="141" fill="#9aa5b8" font-size="11.5">或整批回改</text>
+  </g>
+
+  <!-- 主线箭头 -->
+  <g stroke="#5b6478" stroke-width="2" fill="none" marker-end="url(#arr)">
+    <path d="M177 108 H203"/>
+    <path d="M368 108 H394"/>
+    <path d="M559 108 H585"/>
+    <path d="M750 108 H776"/>
+    <path d="M941 108 H967"/>
+    <path d="M1132 108 H1158"/>
+    <path d="M1323 108 H1349"/>
+  </g>
+  <defs>
+    <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0 0 L8 4.5 L0 9 Z" fill="#5b6478"/>
+    </marker>
+    <marker id="arrR" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0 0 L8 4.5 L0 9 Z" fill="#ff6b81"/>
+    </marker>
+  </defs>
+
+  <!-- 底部回环 -->
+  <path d="M1434 156 V198 H399 V160" stroke="#ff6b81" stroke-width="1.6" fill="none" stroke-dasharray="6 5" marker-end="url(#arrR)"/>
+  <rect x="700" y="185" width="440" height="26" rx="6" fill="#170f13" stroke="#ff6b81" stroke-width="1"/>
+  <text x="920" y="202" fill="#ff8f9f" font-size="12" text-anchor="middle">不通过：机器自己改词重抽，不回头问人；同一张反复不过＝回卡层解决</text>
+
+  <!-- 判据贯穿带 -->
+  <rect x="17" y="226" width="1497" height="86" rx="10" fill="#0f1614" stroke="#3ddc97" stroke-width="1.4"/>
+  <text x="33" y="248" fill="#3ddc97" font-size="13" font-weight="700">判据在每一步把关</text>
+  <g font-size="12.5" fill="#c7d3c8">
+    <text x="33" y="272">① 体检不齐不开工</text>
+    <text x="200" y="272">② 方向先试片再往下</text>
+    <text x="410" y="272">③ 母版逐项继承、继承后不回头改</text>
+    <text x="700" y="272">④ 每一档条目各有判据</text>
+    <text x="920" y="272">⑤ 失败即停，不糊过去</text>
+  </g>
+  <g font-size="12" fill="#7f8f85">
+    <text x="33" y="294">机器只判"过没过"，不判"好不好看"</text>
+    <text x="330" y="294">规则写在文件里，每一步为什么这么做都能回溯</text>
+    <text x="700" y="294">不通过的图全部留档，成错题本</text>
+  </g>
+
+  <!-- 底部说明 -->
+  <text x="17" y="342" fill="#e8ecf3" font-size="13" font-weight="700">产出五件资产</text>
+  <g font-size="12" fill="#9aa5b8">
+    <text x="120" y="342">角色设定稿（可复用·可回溯）</text>
+    <text x="320" y="342">方向试片（人只在这里抽一次）</text>
+    <text x="520" y="342">母版（整套图的锚点）</text>
+    <text x="700" y="342">整套成图（一次跑完的完整交付）</text>
+    <text x="960" y="342">台账与错题本（过程本身就是资产）</text>
+  </g>
+  <text x="17" y="384" fill="#5b6478" font-size="11.5">对外展示版：不含内部实现细节、脚本与路径、版本号与运行数据</text>
+</svg>
+
+    </div>
+  </section>
+
+  <!-- 03 主流程泳道 -->
+  <section class="sec">
+    <div class="sec-h"><span class="n">03</span><h2>云端全自动主流程：人在两头，机器跑中段</h2><span class="tag">每一步的"为什么"都有出处</span></div>
+
+    
+    <div class="lanes">
+      <div class="lane-row">
+        <div class="lane-label"><b>① 人</b>两次决定 + 一次验收</div>
+        <div class="node step1"><div class="step">DECIDE 1</div><div class="t">给方向</div><div class="d">出单个角色，还是一个 IP 里的角色</div></div>
+        <div class="node step1"><div class="step">DECIDE 2</div><div class="t">抽方向试片</div><div class="d">在两条方向里挑一条往下走</div></div>
+        <div class="node idle"><div class="t">—</div><div class="d">机器自动推进，人不介入</div></div>
+        <div class="node idle"><div class="t">—</div><div class="d">整套一次跑完，不逐张等图</div></div>
+        <div class="node step1"><div class="step">FINAL</div><div class="t">终判</div><div class="d">看总览拼版定稿或打回</div></div>
+      </div>
+
+      <div class="lane-row">
+        <div class="lane-label"><b>② 判据</b>为什么这么做</div>
+        <div class="node rule"><div class="t">先体检再开工</div><div class="d">设定字段齐不齐、判据在不在，通过才动机器</div></div>
+        <div class="node rule"><div class="t">方向先试片</div><div class="d">先定方向再往下走，避免整批返工</div></div>
+        <div class="node rule"><div class="t">母版逐项继承</div><div class="d">继承结构记号，不写"去掉/换成"式减法词</div></div>
+        <div class="node rule"><div class="t">逐档条目判据</div><div class="d">景别、构图、人数、文字、表情逐项核对</div></div>
+        <div class="node rule"><div class="t">失败即停</div><div class="d">批次上限与失败上限先卡死，超了即停</div></div>
+      </div>
+
+      <div class="lane-row">
+        <div class="lane-label"><b>③ 机器</b>云端全自动</div>
+        <div class="node mach" style="grid-column:2 / span 1"><div class="t">自动成稿</div><div class="d">按设定一次生成提示词与清单</div></div>
+        <div class="node mach" style="grid-column:3 / span 1"><div class="t">出方向试片</div><div class="d">按两条方向各出一张，交人抽</div></div>
+        <div class="node mach" style="grid-column:4 / span 1"><div class="t">出母版</div><div class="d">由定稿全身推出，推出后不再回头改</div></div>
+        <div class="node mach" style="grid-column:5 / span 1"><div class="t">一次跑完全套</div><div class="d">整套条目连跑，不逐张等人验收</div></div>
+        <div class="node mach" style="grid-column:6 / span 1"><div class="t">自检归档</div><div class="d">机器逐项初筛、归档、写台账</div></div>
+      </div>
+
+      <div class="lane-row">
+        <div class="lane-label"><b>④ 产出</b>归人</div>
+        <div class="node" style="grid-column:2 / span 1"><div class="step">ASSET</div><div class="t">角色设定稿</div><div class="d">可复用 · 可回溯</div></div>
+        <div class="node" style="grid-column:3 / span 1"><div class="step">ASSET</div><div class="t">方向试片</div><div class="d">人只在这里抽一次</div></div>
+        <div class="node" style="grid-column:4 / span 1"><div class="step">ASSET</div><div class="t">母版</div><div class="d">整套图的锚点</div></div>
+        <div class="node asset" style="grid-column:5 / span 1"><div class="step">ASSET</div><div class="t">整套成图</div><div class="d">一次跑完的完整交付</div></div>
+        <div class="node asset" style="grid-column:6 / span 1"><div class="step">ASSET</div><div class="t">台账与错题本</div><div class="d">过程本身就是资产</div></div>
+      </div>
+
+      <div class="loop">↺ 不通过 → 机器自己改词重抽，不回头问人；同一张反复不过＝判定口径有问题，回到卡层解决，不靠抽卡。</div>
+
+      <div class="legend">
+        <span><i class="sw" style="background:rgba(78,168,255,.5);border:1px solid var(--accent)"></i>人做的动作</span>
+        <span><i class="sw" style="background:rgba(61,220,151,.35);border:1px solid rgba(61,220,151,.6)"></i>判定依据（外置规则）</span>
+        <span><i class="sw" style="background:rgba(255,181,69,.3);border:1px solid rgba(255,181,69,.6)"></i>机器执行</span>
+        <span><i class="sw" style="background:rgba(180,140,255,.3);border:1px solid rgba(180,140,255,.6)"></i>产出资产</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 人机分工 -->
+  <section class="sec">
+    <div class="sec-h"><span class="n">04</span><h2>人机分工：三种角色，三条边界</h2><span class="tag">归属清晰，才不会互相覆盖</span></div>
+    <div class="grid3">
+      <div class="card c-accent">
+        <div class="bar"></div>
+        <h3>人做方向与终判 <span class="who">HUMAN</span></h3>
+        <p>定方向、挑终稿。改设定就作废旧图，所以设定只在人手里改，机器不碰。</p>
+      </div>
+      <div class="card c-ok">
+        <div class="bar"></div>
+        <h3>机器做执行与守门 <span class="who">MACHINE</span></h3>
+        <p>按判据跑、按预算停、按记录留痕。不判断"好不好看"，只判断"过没过"。</p>
+      </div>
+      <div class="card c-vio">
+        <div class="bar"></div>
+        <h3>判据写在文件里 <span class="who">RULES</span></h3>
+        <p>每一步为什么这么做都有出处，可回溯、可交接、可被别人接手继续跑。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 工程纪律 -->
+  <section class="sec">
+    <div class="sec-h"><span class="n">05</span><h2>工程纪律：让机器协作不打架</h2><span class="tag">多人/多会话并行时的底线</span></div>
+    <div class="band">
+      <div class="rule-card c-hot">
+        <div class="bar"></div>
+        <h3>同一份资产，同一时刻只有一个写入者</h3>
+        <p>并发写同一张卡或同一批图是这次项目里最贵的教训：<b>写入必须互斥</b>，读随便读。冲突一旦发生，后面的步骤会在错误的前提上继续跑。</p>
+      </div>
+      <div class="rule-card c-warn">
+        <div class="bar"></div>
+        <h3>闸门要查内容，不能只查形状</h3>
+        <p>"文件在、字段齐、字节数够"不等于合格。<b>空正文也能全绿</b>是真实发生过的失败，所以闸门必须看内容本身。</p>
+      </div>
+      <div class="rule-card c-accent">
+        <div class="bar"></div>
+        <h3>高风险动作先说清再执行</h3>
+        <p>覆盖、删除、改配置、对外发送、花钱这几类动作，一律<b>先给结论与清单、得到确认再动手</b>。</p>
+      </div>
+      <div class="rule-card c-ok">
+        <div class="bar"></div>
+        <h3>每次交付都要有回执</h3>
+        <p>写完收尾体检一次，交付时明确列出<b>含什么、不含什么</b>，避免夹带与漏项。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 现状 -->
+  <section class="sec">
+    <div class="sec-h"><span class="n">06</span><h2>当前状态与下一步</h2><span class="tag">如实标注，不吹进度</span></div>
+    <div class="status">
+      <div class="st">
+        <div class="hd"><span class="pill live">已跑通</span><h3>IP 包 · 角色视觉线</h3></div>
+        <p>从设定到一整套成图已经连成一条线：设定成稿、方向试片、母版推出、整套跑完、机器初筛、终判归档。</p>
+      </div>
+      <div class="st">
+        <div class="hd"><span class="pill live">已成体系</span><h3>IP 包 · 世界观文本层</h3></div>
+        <p>一个 IP 的世界、组织、时间线、立场已成体系：可分卷交付、可分档授权，内容随 IP 走，换 IP 只换包、不动内核。视觉层已能直接取用世界层给定的角色设定与立场，不需要现编。</p>
+      </div>
+      <div class="st">
+        <div class="hd"><span class="pill prep">推进中</span><h3>服装包</h3></div>
+        <p>已从视觉主线拆成独立包，与 IP 包零互相引用，同一套内核驱动，验证"通用"不是口号。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 诚实边界 -->
+  <section class="sec">
+    <div class="sec-h"><span class="n">07</span><h2>这套系统做不到什么</h2><span class="tag">先说清楚，比事后解释便宜</span></div>
+    <div class="bound">
+      <div class="card c-warn">
+        <div class="bar"></div>
+        <h3>判定人只有一个</h3>
+        <p>目前这套流程里，<b>终判只有一个人</b>，没有第二评审、也没有机器复核能替代他的判断。对外不会说成"已经实现自动审核"——它现在就是"机器判可判的，剩下的靠人"。</p>
+      </div>
+      <div class="card c-vio">
+        <div class="bar"></div>
+        <h3>四件事机器判不了</h3>
+        <ul>
+          <li><b>代价是否真付得起</b>：设定再自洽，落不到现实里就是假的</li>
+          <li><b>动机是否说得通</b>：人做一件反常的事，得有站得住的理由</li>
+          <li><b>语气是否一人一声</b>：同一个人在不同场景下不能换一副嗓子</li>
+          <li><b>一致性能否自证</b>：系统判不了自己采来的数据是真是假</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="k">判据前置 · 云端全自动角色视觉生产管线</span>
+    <span>架构与流程描述，非可运行软件 · 文档 CC BY 4.0</span>
+  </footer>
+</div>
+</body>
+</html>

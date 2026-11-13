@@ -1,0 +1,20 @@
+本仓库中的文档、架构图、流程图与文字说明（含 `assets/` 下的 HTML 与 PNG）
+采用 CC BY 4.0 授权：
+
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+https://creativecommons.org/licenses/by/4.0/
+
+你可以自由地共享（以任何媒介或格式复制、发行）与演绎（修改、转换、再创作），
+包括商业用途，条件是署名。
+
+建议署名格式：
+
+    判据前置 · 云端全自动角色视觉生产管线 — 陈世恒 (2026)
+    https://github.com/<owner>/judge-first-pipeline
+
+—— 分割线 ——
+
+代码部分（如导出脚本等可执行文件）采用 MIT 授权，见 LICENSE。
+
+`assets/` 中示例角色图的版权归原作者所有，仅用于展示本管线的产出效果，
+不在上述授权范围内。
