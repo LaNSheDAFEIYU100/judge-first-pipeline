@@ -10,14 +10,17 @@ https://creativecommons.org/licenses/by/4.0/
 建议署名格式：
 
     判据前置 · 云端全自动角色视觉生产管线 — 陈世恒 (2026)
-    https://github.com/<owner>/judge-first-pipeline
+    https://github.com/LaNSheDAFEIYU100/judge-first-pipeline
 
 —— 分割线 ——
 
 代码部分（如导出脚本等可执行文件）采用 MIT 授权，见 LICENSE。
 
-`assets/` 中示例角色图（`sample_*.jpg`）的版权归原作者所有，仅用于展示本管线的
-产出效果，不在上述授权范围内。
+`assets/` 中的示例角色图（`sample_*.jpg`）**不在上述授权范围内**。它们是 AI 生成
+内容（AIGC），仅用于展示本管线的产出效果：
 
-这些示例图是 AI 生成内容（AIGC），文件内保留 TC260 标准的 AIGC 元数据标识
-（`TC260:AIGC`）。转载或再发布时请一并保留该标识，不要删除或篡改。
+- 图上保留生成平台的可见水印与「AI 生成」标识，文件内保留 TC260 标准的 AIGC
+  元数据标识（`TC260:AIGC`）。转载或再发布时请一并保留这些标识，不要裁掉、替换
+  或篡改。
+- 这些图由生成平台产出，不随本仓库的 CC BY 4.0 一并授予下游商用许可。商业使用
+  请直接联系作者另行授权。
