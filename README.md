@@ -14,17 +14,31 @@
 
 ### 一、云端出图服务跑的：两个角色
 
-**灼 · 三视图**（正 / 侧 / 背 + 身高标尺）
+**大肥鱼 · 三视图**（正 / 侧 / 背 + 身高标尺）
 
-![zhuo character sheet](assets/sample_zhuo.jpg)
+![feiyu character sheet](assets/samples/feiyu/05.jpg)
 
-同一角色在三个朝向下保持一致的记号：橙发九尾、狐耳、和风黑袍配橙色花纹腰带、背后的金花腰饰。图上保留生成平台的可见水印与 AIGC 标识。
+同一角色在三个朝向下保持一致的记号：蓝白渐变长发、女仆发带、白围裙上的鲸鱼刺绣、身后鲸尾。图上保留生成平台的可见水印与 AIGC 标识。
 
-**缮 · 场景全身**（雨夜 / 和服 / 伞与刀）
+**大肥鱼 · 角色海报**（带排版设计的版式，场景变体之一）
 
-![shan poster](assets/sample_shan.jpg)
+![feiyu poster](assets/samples/feiyu/09.jpg)
 
-同一角色在场景里的样子。右侧的排版字是这张图自带的设计，不是水印；右下角是生成平台水印。
+图上的「FATFISH / 大肥鱼」排版字是这张图自带的设计，不是水印；右下角是生成平台水印。
+
+**霓 · 三视图**（正 / 侧 / 背 + 身高标尺）
+
+![ni character sheet](assets/samples/ni/05.jpg)
+
+同一角色在三个朝向下保持一致的记号：银白双马尾、舞台短裙、白色长筒靴。图上保留生成平台的可见水印与 AIGC 标识。
+
+**霓 · 舞台全身**
+
+![ni stage](assets/samples/ni/16.jpg)
+
+同一角色在场景里的样子。右边一列是舞台灯，不是图坏了。
+
+这两个角色各跑完一整套：大肥鱼 23 张、霓 23 张（三视图、表情档、场景档、海报版式），完整目录在 [`assets/samples/feiyu/`](assets/samples/feiyu) 与 [`assets/samples/ni/`](assets/samples/ni)。
 
 这类图最容易崩的不是画风，是「换个角度就变人」。管线里的一致性判据就是专门拦这个的。
 
